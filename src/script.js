@@ -59,7 +59,11 @@ const sendMessage = () => {
 }
 
 const displayRes = (message) => {
-    incomingMessage.innerText = message;
+    const previousText = incomingMessage.innerText;
+
+    incomingMessage.innerText = `${previousText}${previousText ? '\n\n' : ''}${message}`;
+
+    incomingMessage.scrollTo(0, incomingMessage.scrollHeight);
 }
 
 displayIp.innerText = `Мой IP-адрес: ${getIp()}`;
