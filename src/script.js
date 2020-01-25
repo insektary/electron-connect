@@ -4,6 +4,8 @@ import express from 'express';
 
 const server = express();
 
+const PORT = 8000;
+
 const displayIp = document.querySelector('.display-ip');
 const sendButton = document.querySelector('.outgoing-message__send');
 const textArea = document.querySelector('.outgoing-message__input');
@@ -45,7 +47,7 @@ const sendMessage = () => {
     const targetIP = [].map.call(ipInputs, (item) => item.value).reduce((acc, item) => `${acc}.${item}`);
     const message = textArea.value;
 
-    fetch(`http://${targetIP}`, {
+    fetch(`http://${targetIP}:${PORT}`, {
         method: 'POST',
         body: message
     })
@@ -62,7 +64,7 @@ const displayRes = (message) => {
 
 displayIp.innerText = `Мой IP-адрес: ${getIp()}`;
 
-server.listen(80, () => {
+server.listen(PORT, () => {
     console.log('Server is running');
 });
 
