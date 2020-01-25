@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="UTF-8">
+        <title>Electron connect</title>
+        <link rel="stylesheet" href="index.css">
+    </head>
+    <body>
+        <div class="app-container">
+            <div class="display-ip"></div>
+            <div class="incoming-message">
+                <span class="incoming-message__title">Входящие сообщения</span>
+                <div class="incoming-message__display"></div>
+            </div>
+            <div class="enter-ip">
+                <span class="enter-ip__title" >Сюда введите IP-адрес получателя:</span>
+                <input class="enter-ip__input" maxlength="3" />
+                <input class="enter-ip__input" maxlength="3" />
+                <input class="enter-ip__input" maxlength="3" />
+                <input class="enter-ip__input" maxlength="3" />
+            </div>
+            <div class="outgoing-message">
+                <span class="outgoing-message__title" >Сюда введите текст вашего сообщения:</span>
+                <div>
+                    <span class="outgoing-message__error outgoing-message__error--hidden">Что-то пошло не так! Проверьте, правильно ли вы ввели адрес!</span>
+                </div>
+                <textarea class="outgoing-message__input"></textarea>
+                <button class="outgoing-message__send" >Отправить сообщение</button>
+            </div>
+        </div>
+    </body>
+    <script src="./script.js"></script>
+</html>
