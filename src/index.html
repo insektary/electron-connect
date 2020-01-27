@@ -9,7 +9,10 @@
         <div class="app-container">
             <div class="display-ip"></div>
             <div class="incoming-message">
-                <span class="incoming-message__title">Входящие сообщения</span>
+                <div class="incoming-message-container">
+                    <span class="incoming-message__title">Переписка</span>
+                    <button class="incoming-message__clean">Очистить историю сообщений</button>
+                </div>
                 <div class="incoming-message__display"></div>
             </div>
             <div class="enter-ip">
@@ -18,6 +21,7 @@
                 <input class="enter-ip__input" maxlength="3" />
                 <input class="enter-ip__input" maxlength="3" />
                 <input class="enter-ip__input" maxlength="3" />
+                <button class="enter-ip__clear" >Очистить</button>
             </div>
             <div class="outgoing-message">
                 <span class="outgoing-message__title" >Сюда введите текст вашего сообщения:</span>

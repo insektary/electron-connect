@@ -1,5 +1,5 @@
 import os from 'os';
-import {get} from 'lodash';
+import {get, head} from 'lodash';
 import express from 'express';
 
 const server = express();
@@ -12,6 +12,8 @@ const textArea = document.querySelector('.outgoing-message__input');
 const incomingMessage = document.querySelector('.incoming-message__display');
 const ipInputs = document.querySelectorAll('.enter-ip__input');
 const errorMessage = document.querySelector('.outgoing-message__error');
+const clearIpButton = document.querySelector('.enter-ip__clear');
+const clearMessagesButton = document.querySelector('.incoming-message__clean');
 
 server.post('/', (req, res, next) => {
     req.rawBody = '';
@@ -24,7 +26,7 @@ server.post('/', (req, res, next) => {
     req.on('end', () => {
         next();
 
-        displayRes(req.rawBody);
+        displayIncomingMessage({message: req.rawBody, ip: head(get(req, 'headers.host', '').split(':'))});
         res.end();
     });
 });
@@ -43,6 +45,30 @@ const hideError = () => {
     errorMessage.className = 'outgoing-message__error outgoing-message__error--hidden';
 }
 
+const clearIp = () => {
+    [].forEach.call(ipInputs, (item) => item.value = '');
+}
+
+const displayOutgoingMessage = (message) => {
+    const newItem = document.createElement('div');
+    newItem.className = 'outgoing-message__item';
+    newItem.innerHTML = `Вы: <br>${message}`;
+    newItem.align = 'right';
+    incomingMessage.appendChild(newItem);
+}
+
+const displayIncomingMessage = ({message, ip}) => {
+    const newItem = document.createElement('div');
+    newItem.className = 'incoming-message__item';
+    newItem.innerHTML = `${ip}: <br>${message}`;
+    incomingMessage.appendChild(newItem);
+    incomingMessage.scrollTo(0, incomingMessage.scrollHeight);
+}
+
+const clearMessages = () => {
+    incomingMessage.innerHTML = '';
+}
+
 const sendMessage = () => {
     const targetIP = [].map.call(ipInputs, (item) => item.value).reduce((acc, item) => `${acc}.${item}`);
     const message = textArea.value;
@@ -51,25 +77,26 @@ const sendMessage = () => {
         method: 'POST',
         body: message
     })
-        .then(() => textArea.value = '')
+        .then(() => {
+            textArea.value = '';
+            displayOutgoingMessage(message);
+        })
         .catch(() => {
             showError();
             setTimeout(hideError, 5000);
         })
 }
 
-const displayRes = (message) => {
-    const previousText = incomingMessage.innerText;
+setInterval(() => {
+    const currentIp = getIp();
 
-    incomingMessage.innerText = `${previousText}${previousText ? '\n\n' : ''}${message}`;
-
-    incomingMessage.scrollTo(0, incomingMessage.scrollHeight);
-}
-
-displayIp.innerText = `Мой IP-адрес: ${getIp()}`;
+    displayIp.innerText = currentIp ? `Мой IP-адрес: ${currentIp}` : 'IP-адрес не определен';  
+}, 2000);
 
 server.listen(PORT, () => {
     console.log('Server is running');
 });
 
 sendButton.addEventListener('click', sendMessage);
+clearIpButton.addEventListener('click', clearIp);
+clearMessagesButton.addEventListener('click', clearMessages);
