@@ -1,5 +1,5 @@
 import os from 'os';
-import {get, head} from 'lodash';
+import {get} from 'lodash';
 import express from 'express';
 
 const server = express();
@@ -26,7 +26,15 @@ server.post('/', (req, res, next) => {
     req.on('end', () => {
         next();
 
-        displayIncomingMessage({message: req.rawBody, ip: head(get(req, 'headers.host', '').split(':'))});
+        let body;
+
+        try {
+            body = JSON.parse(req.rawBody);
+        } catch (e) {
+            body = {};
+        }
+    
+        displayIncomingMessage({message: get(body, 'message', ''), ip: get(body, 'ip', '')});
         res.end();
     });
 });
@@ -75,7 +83,10 @@ const sendMessage = () => {
 
     fetch(`http://${targetIP}:${PORT}`, {
         method: 'POST',
-        body: message
+        body: JSON.stringify({
+            message,
+            ip: getIp()
+        })
     })
         .then(() => {
             textArea.value = '';
